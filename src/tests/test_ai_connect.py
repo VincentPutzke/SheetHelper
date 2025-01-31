@@ -2,7 +2,7 @@ import unittest
 from dotenv import load_dotenv
 import os
 
-from src.ai_connect import AiConnect
+from ai_connect import AiConnect
 
 class TestAiConnect(unittest.TestCase):
     
@@ -32,8 +32,8 @@ class TestAiConnect(unittest.TestCase):
     def test_send_request(self):
         raw_prompt = "test raw prompt"
         self.load_api_key()
-        completion = self.ai_connect.send_request(raw_prompt)
-        self.assertIsNotNone(completion.response)
+        result = self.ai_connect.send_request(raw_prompt)
+        self.assertIsNotNone(result)
     
     
 if __name__ == '__main__':

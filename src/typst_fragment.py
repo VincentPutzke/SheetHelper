@@ -7,6 +7,8 @@ class TypstFragment:
         self.header = f"= {r_header}"
         
     def add(self, text):
+        if text is None:
+            return
         self.blocks.append(text)
         
     def to_text(self):

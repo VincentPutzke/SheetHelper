@@ -7,7 +7,7 @@ class AiConnect():
         self.client = Groq(api_key=api_key)
         if api_key == "demo":
             self.demo_mode = True
-        self.use_llama()
+        self.use_deepseek()
         
     def use_deepseek(self):
         self.model = "deepseek-r1-distill-llama-70b"

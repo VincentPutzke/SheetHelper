@@ -1,4 +1,4 @@
-from src.typst_fragment import TypstFragment
+from typst_fragment import TypstFragment
 
 class TypstDoc:
     fragments = []

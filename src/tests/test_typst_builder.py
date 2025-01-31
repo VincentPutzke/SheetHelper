@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import MagicMock
-from src.typst_builder import TypstBuilder
+from typst_builder import TypstBuilder
 
 class TestTypstBuilder(unittest.TestCase):
     
