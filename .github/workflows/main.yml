@@ -27,5 +27,4 @@ jobs:
 
     - name: Run tests
       run: |
-        # Add your test command here
-        echo "No tests defined"
+        python -m unittest discover -s tests
