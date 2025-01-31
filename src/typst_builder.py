@@ -2,10 +2,10 @@ from dotenv import load_dotenv
 import os
 import re
 
-from typst_doc import TypstDoc
-from typst_fragment import TypstFragment
-from ai_connect import AiConnect
-import templates
+from src.typst_doc import TypstDoc
+from src.typst_fragment import TypstFragment
+from src.ai_connect import AiConnect
+import src.templates
 
 class TypstBuilder():
     queued_fragments = []
