@@ -1,5 +1,4 @@
 import re
-import pandas as pd
 import io
 import numpy as np
 
