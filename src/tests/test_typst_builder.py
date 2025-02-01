@@ -36,7 +36,7 @@ class TestTypstBuilder(unittest.TestCase):
         fragment = self.builder.queued_fragments[0]
         self.assertIsInstance(fragment, TypstFragment)
         self.assertEqual(fragment.header, "= Small Topic")
-        self.assertEqual(fragment.blocks, ["#let Small Topic = csv(\"data/Small Topic.csv\")\n#align(center, block(  table(align: left,\n    columns: Small Topic.first().len(),\n    ..for row in Small Topic {\n      row\n  }\n)))"])
+        self.assertEqual(fragment.blocks, ["#let Small_Topic = csv(\"data/Small_Topic.csv\")\n#align(center, block(  table(align: left,\n    columns: Small_Topic.first().len(),\n    ..for row in Small_Topic {\n      row\n  }\n)))"])
         
         
     def test_export(self):

@@ -44,7 +44,7 @@ class TypstBuilder():
             str: The generated table as a string.
         """
         
-        table = templates.generate_table_data_template(columns, rows, ["ITEM" for i in range(rows)])
+        table = templates.generate_table_data_template(columns, rows, ["ITEM" for i in range(columns)])
         
         prompt = f"""Replace the placeholders in this table with information about
         the topic {small_topic} in the scheme of {self.topic} in this language: {self.language}.
