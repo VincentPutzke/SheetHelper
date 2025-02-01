@@ -60,6 +60,9 @@ class TestTypstBuilder(unittest.TestCase):
         self.builder.doc = MagicMock()
         self.builder.topic = "test_topic"
         self.builder.doc.to_text.return_value = "Test content with ä, ö, ü"
+        
+        
+        os.makedirs("output", exist_ok=True) # make directory if it doesn't exist
         self.builder.export()
         with open("output/test_topic.typ", "r", encoding="utf-8") as file:
             content = file.read()
