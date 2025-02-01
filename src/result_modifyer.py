@@ -1,4 +1,7 @@
 import re
+import pandas as pd
+import io
+import numpy as np
 
 def _find_after_last(text, type_pattern):
     """
@@ -59,11 +62,47 @@ def _find_before_first(text, type_pattern):
         print(f"Invalid regex pattern: {e}")
         return None
 
-def filter_code_result(text):
-    stage_1_text = _find_after_last(text, r"<TYP>")
+def _filter_with_pattern(text, type_pattern_start, type_pattern_end):
+    stage_1_text = _find_after_last(text, type_pattern_start)
     if stage_1_text is None:
         return ""
-    stage_2_text = _find_before_first(stage_1_text, r"</TYP>")
+    stage_2_text = _find_before_first(stage_1_text, type_pattern_end)
     if stage_2_text is None:
         return ""
     return stage_2_text
+
+def filter_code_result(text):
+    return _filter_with_pattern(text, r"<TYP>", r"</TYP>")
+
+def filter_task_result(text):
+    return _filter_with_pattern(text, r"<TASK>", r"</TASK>")
+
+def randomize_row_order(text, column_count):
+    
+    matches = re.findall(r"\"(.*?)\"", text)
+    columns = []
+    for i in range(column_count):
+        columns.append([])
+    col = 0
+    header_row = []
+    for m in matches[:-column_count]:
+        header_row.append(m)
+    for m in matches[column_count:]:
+        columns[col].append(m)
+        col += 1
+        col %= column_count
+    
+    for c in columns:
+        np.random.shuffle(c)
+    
+    row_count = len(columns[0])
+    result = ""
+    for c in range(column_count-1):
+        result += f"\"{header_row[c]}\","
+    result += f"\"{header_row[column_count-1]}\"\n"
+    for r in range(row_count):
+        for c in range(column_count-1):
+            result += f"\"{columns[c][r]}\","
+        result += f"\"{columns[column_count-1][r]}\"\n"
+        
+    return result
