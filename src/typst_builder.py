@@ -11,17 +11,37 @@ class TypstBuilder():
     queued_fragments = []
     
     def __init__(self, grade, topic, language="deutsch"):
+        """
+        Initialize a TypstBuilder instance.
+        
+        Args:
+            grade (int): The grade level.
+            topic (str): The topic of the document.
+            language (str): The language of the document. Default is "deutsch".
+        """
         self.grade = grade
         self.topic = topic
         self.language = language
         
         self.doc = TypstDoc()
         
-        load_dotenv("src\.env")
+        # Load API key from environment variables
+        load_dotenv("src/.env")
         api_key = os.getenv("key")
         self.ai = AiConnect(api_key)
         
     def generate_table(self, small_topic, columns=3, rows=5):
+        """
+        Generate a table with information about a small topic.
+        
+        Args:
+            small_topic (str): The small topic for the table.
+            columns (int): The number of columns in the table. Default is 3.
+            rows (int): The number of rows in the table. Default is 5.
+        
+        Returns:
+            str: The generated table as a string.
+        """
         table = templates.generate_table_template(columns, rows)
         prompt = f"""Fill in this table with information about
         the topic {small_topic} in the scheme of {self.topic}.
@@ -34,21 +54,20 @@ class TypstBuilder():
         self.queued_fragments.append(fragment)
         return self.queued_fragments.index(fragment)
     
-    def _filter_answer(self, answer):
-        # Get the text after the last <TYP>
-        last_typ_index = answer.rfind('<TYP>')
-        if last_typ_index == -1:
-            return None
+    def _filter_answer(self, text):
+        """
+        Filter the answer from the AI response.
         
-        text_after_last_typ = answer[last_typ_index + len('<TYP>'):]
+        Args:
+            text (str): The text containing the AI response.
         
-        # Remove all text after the first </TYP>
-        first_end_typ_index = text_after_last_typ.find('</TYP>')
-        if first_end_typ_index == -1:
-            return None
-        
-        result = text_after_last_typ[:first_end_typ_index]
-        return result
+        Returns:
+            str: The filtered answer.
+        """
+        matches = re.findall(r"<TYP>(.*?)</TYP>", text)
+        if matches:
+            return matches[-1]
+        return ""
     
     def clear_doc(self):
         self.doc.blocks = []
@@ -67,6 +86,9 @@ class TypstBuilder():
         print(result)
     
     def export(self):
-        result = self.doc.to_text()
+        """
+        Export the document to a .typ file.
+        """
+        content = self.doc.to_text()
         with open(f"output/{self.topic}.typ", "w", encoding="utf-8") as file:
-            file.write(result)
+            file.write(content)

@@ -1,5 +1,8 @@
 
 def generate_table_template(columns, rows):
+    if columns == 0:
+        return "#table(\n  columns: ( ),\n)\n"
+        
     template = "#table(\n  columns: ("
     
     for i in range(columns-1):
