@@ -4,27 +4,30 @@ on: [push, pull_request]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.8'
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
-    - name: Run application
-      run: |
-        python src/main.py
+      - name: Set Groq API Key  # New step to set the environment variable
+        run: echo "GROQ_API_KEY is set"
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
 
-    - name: Run tests
-      run: |
-        python -m unittest discover -s tests
+      - name: Run application
+        run: |
+          python src/main.py  # Your application should now access GROQ_API_KEY from the environment
+
+      - name: Run tests
+        run: |
+          python -m unittest discover -s tests
