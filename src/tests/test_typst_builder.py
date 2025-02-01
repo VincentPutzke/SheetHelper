@@ -1,5 +1,6 @@
 import unittest
 import tempfile
+import os
 
 from unittest.mock import MagicMock
 from typst_builder import TypstBuilder
