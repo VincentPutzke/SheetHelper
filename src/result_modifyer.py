@@ -78,7 +78,6 @@ def filter_task_result(text):
     return _filter_with_pattern(text, r"<TASK>", r"</TASK>")
 
 def randomize_row_order(text, column_count):
-    
     matches = re.findall(r"\"(.*?)\"", text)
     columns = []
     for i in range(column_count):
