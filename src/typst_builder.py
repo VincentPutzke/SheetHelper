@@ -64,13 +64,16 @@ class TypstBuilder():
         Returns:
             str: The filtered answer.
         """
-        matches = re.findall(r"<TYP>(.*?)</TYP>", text)
+        matches = re.findall(r"<TYP>(.*?)</TYP>", text, re.DOTALL)
         if matches:
             return matches[-1]
         return ""
     
+    def clear_queue(self):
+        self.queued_fragments = []
+    
     def clear_doc(self):
-        self.doc.blocks = []
+        self.doc.fragments.clear()
     
     def setup_doc(self):
         self.doc.append.setup()
