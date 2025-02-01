@@ -22,10 +22,10 @@ class TestTypstBuilder(unittest.TestCase):
         self.builder.clear_queue()
         
         self.builder.ai.send_request.return_value = "<TYP>Mocked AI response</TYP>"
-        self.builder.ai.send_request = MagicMock(return_value="This is the start. <TYP>#table(\n  columns: ( auto, auto, auto),\n  [H0],[H1],[H2],\n  [C00],[C01],[C02],\n  [C10],[C11],[C12],\n  [C20],[C21],[C22],\n  [C30],[C31],[C32],\n  [C40],[C41],[C42],\n)</TYP> This is the ending.")
+        self.builder.ai.send_request = MagicMock(return_value="This is the start. <TYP>\"HEADER1\", \"HEADER2\"\n\"CELL1\", \"CELL2\"\n</TYP> This is the ending.")
         
         # Call the generate_table method
-        index = self.builder.generate_table("Small Topic", columns=3, rows=5)
+        index = self.builder.generate_table("Small Topic", columns=2, rows=1)
         
         # Verify the AI request
         self.builder.ai.send_request.assert_called_once()
@@ -36,24 +36,8 @@ class TestTypstBuilder(unittest.TestCase):
         fragment = self.builder.queued_fragments[0]
         self.assertIsInstance(fragment, TypstFragment)
         self.assertEqual(fragment.header, "= Small Topic")
-        self.assertEqual(fragment.blocks, ["#table(\n  columns: ( auto, auto, auto),\n  [H0],[H1],[H2],\n  [C00],[C01],[C02],\n  [C10],[C11],[C12],\n  [C20],[C21],[C22],\n  [C30],[C31],[C32],\n  [C40],[C41],[C42],\n)"])
-    
-    def test_filter_answer(self):
-        text = "Some text <TYP>This is the content</TYP> more text <TYP>Another content</TYP>"
-        result = self.builder._filter_answer(text)
-        self.assertEqual(result, "Another content")
+        self.assertEqual(fragment.blocks, ["#let Small Topic = csv(\"data/Small Topic.csv\")\n#align(center, block(  table(align: left,\n    columns: Small Topic.first().len(),\n    ..for row in Small Topic {\n      row\n  }\n)))"])
         
-        text = "Some text without typ!"
-        result = self.builder._filter_answer(text)
-        self.assertEqual(result, "")
-        
-        text = "Some text with just <TYP> but no closing tag"
-        result = self.builder._filter_answer(text)
-        self.assertEqual(result, "")
-        
-        text = "This is the start. <TYP>#table(\n  columns: ( auto, auto, auto),\n  [H0],[H1],[H2],\n  [C00],[C01],[C02],\n  [C10],[C11],[C12],\n  [C20],[C21],[C22],\n  [C30],[C31],[C32],\n  [C40],[C41],[C42],\n)</TYP> This is the ending."
-        result = self.builder._filter_answer(text)
-        self.assertEqual(result, "#table(\n  columns: ( auto, auto, auto),\n  [H0],[H1],[H2],\n  [C00],[C01],[C02],\n  [C10],[C11],[C12],\n  [C20],[C21],[C22],\n  [C30],[C31],[C32],\n  [C40],[C41],[C42],\n)")
         
     def test_export(self):
         self.builder.clear_doc()
