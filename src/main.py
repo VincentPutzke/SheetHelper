@@ -3,10 +3,10 @@ import templates
 
 
 
-builder = TypstBuilder(5, "Jahreszeiten")
-index = builder.generate_table("Wetter", 2, 3)
+builder = TypstBuilder(5, "Deutsche Städte")
+index = builder.generate_table("Definition einer Stadt", 3, 5)
 builder.add_to_doc(index)
-index = builder.generate_combine("Temperatur", 5)
+index = builder.generate_combine("Hauptstädte der Bundesländer", 16)
 builder.add_to_doc(index)
 
 builder.export()

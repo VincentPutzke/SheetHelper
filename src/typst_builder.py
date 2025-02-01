@@ -44,7 +44,7 @@ class TypstBuilder():
             str: The generated table as a string.
         """
         
-        table = templates.generate_table_data_template(columns, rows)
+        table = templates.generate_table_data_template(columns, rows, ["ITEM" for i in range(rows)])
         
         prompt = f"""Replace the placeholders in this table with information about
         the topic {small_topic} in the scheme of {self.topic} in this language: {self.language}.
@@ -55,9 +55,9 @@ class TypstBuilder():
         result = self.ai.send_request(prompt)
         filtered_result = result_modifyer.filter_code_result(result)
         
-        self._save_filtered_result(small_topic, filtered_result)
+        self._save_filtered_result(small_topic.replace(" ", "_"), filtered_result)
         
-        combined_result = templates.combine_table_with_data(small_topic)
+        combined_result = templates.combine_table_with_data(small_topic.replace(" ", "_"))
         
         fragment = TypstFragment(small_topic)
         fragment.add(combined_result)
@@ -94,9 +94,9 @@ class TypstBuilder():
         
         randomized_result = result_modifyer.randomize_row_order(code_result, 2)
         
-        self._save_filtered_result(small_topic, randomized_result)
+        self._save_filtered_result(small_topic.replace(" ", "_"), randomized_result)
         
-        combined_result = templates.combine_connect_with_template(small_topic)
+        combined_result = templates.combine_connect_with_template(small_topic.replace(" ", "_"))
         
         fragment = TypstFragment(small_topic)
         fragment.set_task(task_result)
