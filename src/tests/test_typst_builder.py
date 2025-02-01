@@ -1,4 +1,6 @@
 import unittest
+import tempfile
+
 from unittest.mock import MagicMock
 from typst_builder import TypstBuilder
 from typst_doc import TypstDoc
@@ -9,7 +11,11 @@ class TestTypstBuilder(unittest.TestCase):
     def setUp(self):
         self.builder = TypstBuilder(5, "Test")
         self.builder.ai = MagicMock()
-
+        self.test_dir = tempfile.TemporaryDirectory()
+    
+    def tearDown(self):
+        self.test_dir.cleanup()
+    
     def test_generate_table(self):
         self.builder.clear_doc()
         self.builder.clear_queue()
